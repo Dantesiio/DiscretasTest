@@ -68,58 +68,69 @@ public class BST <K extends Comparable,T>implements IBinarySearchTree<K,T> {
 
     @Override
     public T delete(K key) {
-        return delete(null, root, key);
+        root = delete(null, root, key);
+        return null;
     }
 
-    private T delete(Node<K, T> parent, Node<K, T> current, K goal) {
+    private Node<K, T> delete(Node<K, T> parent, Node<K, T> current, K goal) {
         if (current == null) {
             return null;
         }
-        //Encontramos al nodo
+//Encontramos al nodo
         if (goal.equals(current.getKey())) {
-            T result = current.getElement();
-            //Es un nodo hoja
+//Es un nodo hoja
             if (current.getRight() == null && current.getLeft() == null) {
-                if (parent.getLeft() == current) {
+                if (parent == null) {
+                    root = null;
+                } else if (parent.getLeft() == current) {
                     parent.setLeft(null);
                 } else {
                     parent.setRight(null);
                 }
             }
-            //Eliminar un nodo que tiene hijo derecho
+//Eliminar un nodo que tiene hijo derecho
             else if (current.getRight() != null && current.getLeft() == null) {
-                if (parent.getLeft() == current) {
+                if (parent == null) {
+                    root = current.getRight();
+                } else if (parent.getLeft() == current) {
                     parent.setLeft(current.getRight());
                 } else {
                     parent.setRight(current.getRight());
                 }
             }
-            //Eliminar un nodo que tiene hijo izquierdo
+//Eliminar un nodo que tiene hijo izquierdo
             else if (current.getRight() == null && current.getLeft() != null) {
-                if (parent.getLeft() == current) {
+                if (parent == null) {
+                    root = current.getLeft();
+                } else if (parent.getLeft() == current) {
                     parent.setLeft(current.getLeft());
                 } else {
                     parent.setRight(current.getLeft());
                 }
-                return result;
             } else { // clave actual es igual a clave buscada
-                Node<K, T> sucessor = getMin(current.getRight());
-                //Sobrescribir la key y los valores
-                current.setKey(sucessor.getKey());
-                current.setElement(sucessor.getElement());
-                return delete(current, current.getRight(), sucessor.getKey());
+                Node<K, T> successor = getMin(current.getRight());
+//Sobrescribir la key y los valores
+                current.setKey(successor.getKey());
+                current.setElement(successor.getElement());
+                current.setRight(delete(current, current.getRight(), successor.getKey()));
             }
-            return result;
+            return current;
         } else if (goal.compareTo(current.getKey()) < 0) {
-            return delete(current, current.getLeft(), goal);
+            current.setLeft(delete(current, current.getLeft(), goal));
         } else { // goal.compareTo(current.getKey()) > 0
-            return delete(current, current.getRight(), goal);
+            current.setRight(delete(current, current.getRight(), goal));
+        }
+        return current;
+    }
+
+    private Node<K,T> getMin(Node<K,T> current) {
+        if (current.getLeft() == null) {
+            return current;
+        } else {
+            return getMin(current.getLeft());
         }
     }
 
-    private Node<K,T> getMin(Node<K,T> right) {
-        return getMin(root);
-    }
 
     /**
      * Retorna una cadena que representa los elementos de los nodos del árbol en orden ascendente.
