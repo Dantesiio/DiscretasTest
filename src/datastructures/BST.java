@@ -1,5 +1,7 @@
 package datastructures;
 
+import java.util.Locale;
+
 public class BST <K extends Comparable,T>implements IBinarySearchTree<K,T> {
     private Node<K, T> root;
 
@@ -125,23 +127,17 @@ public class BST <K extends Comparable,T>implements IBinarySearchTree<K,T> {
      */
     @Override
     public String inOrder() {
-        StringBuilder sb = new StringBuilder();
-        inOrder(root, sb);
-        return sb.toString();
+        return inOrder(root).trim();
     }
-    /**
-     * Recorre los nodos del árbol en orden ascendente y agrega su elemento a una cadena.
-     * @param current el nodo actual que se está visitando
-     * @param sb el objeto StringBuilder que se utiliza para construir la cadena resultante
-     */
-    private void inOrder(Node<K, T> current, StringBuilder sb) {
-        if (current == null) {
-            return;
+    public String inOrder(Node<K,T> current){
+        if (current==null){
+            return "";
+        }else {
+            return inOrder(current.getLeft())+ " " + current.getKey() + inOrder(current.getRight());
         }
-        inOrder(current.getLeft(), sb);
-        sb.append(current.getKey()).append(" ");
-        inOrder(current.getRight(), sb);
-    }
 
+    }
 }
+
+
 
