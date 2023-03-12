@@ -76,9 +76,9 @@ public class BST <K extends Comparable,T>implements IBinarySearchTree<K,T> {
         if (current == null) {
             return null;
         }
-//Encontramos al nodo
+// Encontramos al nodo
         if (goal.equals(current.getKey())) {
-//Es un nodo hoja
+            // Es un nodo hoja
             if (current.getRight() == null && current.getLeft() == null) {
                 if (parent == null) {
                     root = null;
@@ -87,8 +87,9 @@ public class BST <K extends Comparable,T>implements IBinarySearchTree<K,T> {
                 } else {
                     parent.setRight(null);
                 }
+                return current;
             }
-//Eliminar un nodo que tiene hijo derecho
+            // Eliminar un nodo que tiene hijo derecho
             else if (current.getRight() != null && current.getLeft() == null) {
                 if (parent == null) {
                     root = current.getRight();
@@ -97,8 +98,9 @@ public class BST <K extends Comparable,T>implements IBinarySearchTree<K,T> {
                 } else {
                     parent.setRight(current.getRight());
                 }
+                return current;
             }
-//Eliminar un nodo que tiene hijo izquierdo
+            // Eliminar un nodo que tiene hijo izquierdo
             else if (current.getRight() == null && current.getLeft() != null) {
                 if (parent == null) {
                     root = current.getLeft();
@@ -107,23 +109,25 @@ public class BST <K extends Comparable,T>implements IBinarySearchTree<K,T> {
                 } else {
                     parent.setRight(current.getLeft());
                 }
+                return current;
             } else { // clave actual es igual a clave buscada
                 Node<K, T> successor = getMin(current.getRight());
-//Sobrescribir la key y los valores
+                // Sobrescribir la key y los valores
                 current.setKey(successor.getKey());
                 current.setElement(successor.getElement());
                 current.setRight(delete(current, current.getRight(), successor.getKey()));
+                return current;
             }
-            return current;
         } else if (goal.compareTo(current.getKey()) < 0) {
             current.setLeft(delete(current, current.getLeft(), goal));
-        } else { // goal.compareTo(current.getKey()) > 0
+        } else if  (goal.compareTo(current.getKey()) > 0) {
             current.setRight(delete(current, current.getRight(), goal));
+
         }
         return current;
     }
 
-    private Node<K,T> getMin(Node<K,T> current) {
+    private Node<K, T> getMin(Node<K, T> current) {
         if (current.getLeft() == null) {
             return current;
         } else {
